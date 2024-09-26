@@ -143,8 +143,10 @@
 <p>首先新建Address和TCPSocket，然后将Socket视为linux里的管道一样，输入对应的内容，然后反复读取直到结束。</p>
 <p>byte_stream:</p>
 <p>在stream中创建buffer_，在push和pop的时候，先判断buffer_内容的情况，再作出相应的分支选项执行。stream中还包含bytes_pushed_, bytes_poped_, closed_，用来作为标志信息，提供给相应的接口。</p>
+<p>具体而言，对于writer，当push时尽可能写满buffer_，然后调整记录的bytes_pushed_。closed_变量在调用close()时变为true; 当close为true且buffer_是空的时,认为已经完成了传输。</p>
+<p>对于reader，当pop时读取最多len的长度，然后调整记录的bytes_poped_。当peek时返回string_view类型的buffer_。</p>
 <h2 id="implementation-challenges">Implementation Challenges</h2>
-<p>开始的内容是最难的，在实现webget的时候，我完全不知道要怎么做，反复阅读了手册中关于webget的提示，联想到它和管道的相似性，进行了一些尝试，并根据.hh文件中的接口，成功写出了初始化的代码以及.write()函数。</p>
+<p>开始的内容是最难的，在实现webget的时候，我完全不知道要怎么做，反复阅读了手册中关于webget的提示，联想到它和管道的相似性，进行了一些尝试，并根据.hh文件中的接口，成功写出了初始化的代码以及.write()函数。由于对linux的管道写法印象不是很深，阅读了网上一些关于管道的文章，现学了这些调用函数的方法。</p>
 <h2 id="remaining-bugs">Remaining Bugs</h2>
 <p>没有remaining bug</p>
 <h2 id="experimental-results-and-performance">Experimental results and performance.</h2>
