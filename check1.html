@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Program Structure and Design</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h2 id="program-structure-and-design">Program Structure and Design</h2>
+<h5 id="前言">前言</h5>
+<p>这个实验本质上需要实现一个可以记录多个区间的数据结构，每当有新的数据读取时，要根据已有的区间和存储信息进行判断，并将重叠的部分去除。</p>
+<p>区间是有位置关系的，因此每次新读取数据时，需要获取已经存储的相近的区间。这就要求我们能快速获取中间的区间。如果是以链表或数组来记录，则需要花费线性时间才能找到特定区间，这样效率较低。</p>
+<p>因此，我们提出使用map来作为存储区间信息的数据结构。</p>
+<h5 id="实现">实现</h5>
+<p>map是使用红黑树实现的，单点读取、删除、插入都是<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">\log n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span></span></span></span>级别的，优于常见数据结构。要利用map，就需要定义一个结构体作为键，存储区间的两个端点，并定义其大小比较关系。本代码中使用信息的开头下标作为比较的基准，从而方便快速push到writer中。</p>
+<p>当插入时，对插入区间进行了一系列判定和剪切，详见代码。</p>
+<p>我们对实现的数据结构作出如下规定：任何存储的区间都不能互相重叠。这既是实现空间节省的<em>必需要求</em>，又是方便操作的<em>良好性质</em>。</p>
+<p>当要插入区间时，首先将被它完全覆盖的已存储区间删除，这样后续就只用考虑两侧的重叠情况了。考虑两侧时，使用<code>lower_bound()</code>来获取两侧的区间。由于已经删除了中间的若干被覆盖区间，而且根据规定，一开始就没有重叠的区间，所以获取<code>lower_bound()</code>的前一个迭代器必然是在插入区间左侧的。如果左右两侧有重叠，还需要考虑插入的区间是否被某个区间完全覆盖，如果如此，则可以直接返回。<br>
+可以直接返回并不会影响任何存储内容，因为原本就没有互相重叠，如果插入区间被别人覆盖，那一定不会覆盖其他更小的区间，所以在最开始进行“将被它完全覆盖的已存储区间删除”这一步骤时，实际没有进行任何操作。</p>
+<p>进行push时，直接push，然后将对应的区间删除即可。由于维护区间时考虑到了插入的区间必然在writer的capacity之内，因此不需要担心push时容量不够的问题。由于我们在writer中记录了<code>bytes_pushed_</code>变量，因此可以直接获取下一次等待的区间开头。</p>
+<p>当需要获取<code>bytes_pending()</code>时，可以直接将存储的区间全部加起来。</p>
+<p>实现细节详见代码注释。</p>
+<h2 id="implementation-challenges">Implementation Challenges</h2>
+<p>一些边缘情况在最开始没有考虑到。例如只输入一个&quot;&quot;的情况，此时代码中记录的<code>ending_index</code>会由于算式<code>ending_index = first_index + data.length() - 1</code>而变成-1，我一开始设置的初始值就是-1,而且还认为它等于-1时还没有结束，导致出现错误。</p>
+<h2 id="experimental-results-and-performance">Experimental results and performance</h2>
+<p>在我写这篇报告时，我想写“应当尽量合并相邻区间”。但是，如果新插入的区间确实和旁边的区间重叠了（但不是覆盖），是否真的应当合并呢？我进行了如下的尝试（在代码中体现为TYPE1是否define）：</p>
+<p>TYPE1：如果发生上述情况，则将新插入区间的已存储部分截断去除<br>
+TYPE2：如果发生上述情况，则将已存储部分删除，并将二者合并为一个区间</p>
+<p>对两种情况分别运行代码（均取至少第二次运行为准，因为首次运行需要编译），结果如下：</p>
+<p>TYPE1：
+<img src="file:////home/dream/code/check1-1.png" alt="">
+TYPE2：
+<img src="file:////home/dream/code/check1-2.png" alt=""></p>
+<p>可以看到，这二者几乎很接近，但是TYPE2还是稍微慢了一点。我认为这主要是因为TYPE2需要多查找一次区间，比起让树稍微大一点并没有太多优势。我猜测，当下一次还有邻近区间时，可能会将上一次相邻的两个区间中的某一个给完全覆盖，因此树的节点数量还是差不多的。</p>
+
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>

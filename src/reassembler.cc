@@ -1,5 +1,5 @@
 #include "reassembler.hh"
-
+#define TYPE1
 using namespace std;
 void Reassembler::check_end() {
   if (output_.writer().bytes_pushed() ==
@@ -65,8 +65,15 @@ void Reassembler::insert(uint64_t first_index, std::string data,
         // 直接被以前获取的覆盖了
         return;
       }
+#ifdef TYPE1
       data = data.substr(pre->first.last_index - info.first_index + 1);
       info.first_index = pre->first.last_index + 1;
+#else
+      data = pre->second +
+             data.substr(pre->first.last_index - info.first_index + 1);
+      info.first_index = pre->first.first_index;
+      data_store.erase(pre);
+#endif
     }
   }
   it = data_store.lower_bound(info);
@@ -79,8 +86,15 @@ void Reassembler::insert(uint64_t first_index, std::string data,
         // 直接被以前获取的覆盖了
         return;
       }
+#ifdef TYPE1
       data = data.substr(0, it->first.first_index - info.first_index);
       info.last_index = it->first.first_index - 1;
+#else
+      data =
+          data.substr(0, it->first.first_index - info.first_index) + it->second;
+      info.last_index = it->first.last_index;
+      data_store.erase(it);
+#endif
     }
   }
   if (info.first_index <= info.last_index) {
