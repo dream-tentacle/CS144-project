@@ -2,14 +2,43 @@
 
 using namespace std;
 
-void TCPReceiver::receive( TCPSenderMessage message )
-{
+void TCPReceiver::receive(TCPSenderMessage message) {
   // Your code here.
-  (void)message;
+  if (message.RST) {
+    reassembler_.reader().set_error();
+    return;
+  }
+  if (message.SYN) {
+    seq_ = message.seqno;
+    initial_seqno_received_ = true;
+  }
+  if (!initial_seqno_received_) {
+    return;
+  }
+  uint64_t abs_seqno = message.seqno.unwrap(seq_, reassembler_.waiting());
+  if (!message.SYN) {
+    abs_seqno--;
+  }
+  reassembler_.insert(abs_seqno, message.payload, message.FIN);
 }
 
-TCPReceiverMessage TCPReceiver::send() const
-{
+TCPReceiverMessage TCPReceiver::send() const {
   // Your code here.
-  return {};
+  if (reassembler_.reader().has_error()) {
+    TCPReceiverMessage message;
+    message.RST = true;
+    return message;
+  }
+  TCPReceiverMessage message;
+  uint64_t abs_ackno = reassembler_.waiting() + 1;
+  if (reassembler_.writer().is_closed()) {
+    abs_ackno++;
+  }
+  if (initial_seqno_received_) {
+    message.ackno = Wrap32::wrap(abs_ackno, seq_);
+  }
+  message.window_size =
+      static_cast<uint16_t>(std::min(65535UL, reassembler_.capacity()));
+  message.RST = false;
+  return message;
 }

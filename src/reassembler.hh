@@ -54,11 +54,12 @@ public:
 
   // 存储数据的map，用map是因为内部以红黑树实现，查找效率高
   std::map<reassembler_info, std::string> data_store{};
+  uint64_t waiting() const { return waiting_index; }
+  uint64_t capacity() const { return output_.writer().available_capacity(); }
 
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
   uint64_t waiting_index = 0;
-  uint64_t capacity() const { return output_.writer().available_capacity(); }
   int64_t ending_index = -2; // 结尾的位置
   void delete_inner_info(reassembler_info info);
   void process_data_store();
