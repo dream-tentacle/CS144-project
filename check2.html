@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&#x524d;&#x8a00;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h3 id="前言">前言</h3>
+<p>这个实验并不难，没有特殊的算法或结构，只需要正确转化几个数字，处理好他们的关系，并判断一些特殊情况就可以了。因此，我将实现方法与挑战写在一起，描述了我整个实验的基本过程。</p>
+<h3 id="实现的方法和遇到的问题">实现的方法和遇到的问题</h3>
+<p>对于Wrap的<code>warp()</code>函数，只需要将<code>n</code>转化为32位并加上<code>zero_point</code>的值就可以了</p>
+<p>对于<code>unwrap()</code>函数，我的实现可能不是语句最少的，但是写起来逻辑清晰，不需要复杂的思考。首先通过位运算获取高位和低位，将二者拼接得到<code>re</code>。这里没有去管低位应该是正数还是负数，反正在下一步会去处理。<br>
+如果<code>re</code>比<code>checkpoint</code>小，则有可能要返回re，也可能返回re+2^32；如果<code>re</code>比<code>checkpoint</code>大，则有可能要返回<code>re</code>，也可能返回<code>re-2^32</code>。<br>
+在判断时，不仅需要比较re跟checkpoint的关系，还要考虑一些特殊边界，看会不会小于0或者大于2^64。</p>
+<p>TCP Receiver的代码会稍微复杂一些。一开始，我没有注意到接收<code>SYN</code>时的情况。此时，由于信息的<code>seqno</code>指向的是<code>SYN</code>，需要将插入的位置偏移一位才行。（不过由于absolute seqno和index相差一位，在代码中是当本次信息没有<code>SYN</code>时减去1）</p>
+<p>后来，我遇到了结束位置的acknowledge number的问题。如果当前信息在最后，那么实际上多接收了1位FIN，因此要根据<code>writer()</code>是否已经close了来判断是否将<code>ack_no</code>+1.</p>
+<p>接受、发送都没有问题后，就是进行special测试了。由于讲义中没有描述遇到error的处理需求，在<code>“Stream error -&gt; RST flag”</code>任务上我失败了。我查看了用于测试的代码，发现它将<code>reassembler</code>的状态设为了error，因此我在代码中加上了对应的<code>set_error()</code>并返回的处理。写这段文字时，我发现应当在<code>receive()</code>中再加一个判断当前状态是否为error的代码，虽然测试代码中没有测试这种情况，但实际是有可能发生的，即已经发生了错误，但是又接收到了新的消息，这时不必再处理后面的许多代码了，可以直接return（主要是insert()耗时多）。<br>
+此外，返回时，如果有了错误，也应当将RST设为True并直接返回一个message。</p>
+<h3 id="运行结果">运行结果</h3>
+<p>由于已经通过了所有测试，这里直接列出运行结果：
+<img src="file:////home/dream/code/check2-2.png" alt="">
+<img src="file:////home/dream/code/check2-1.png" alt=""></p>
+
+            
+            
+        </body>
+        </html>

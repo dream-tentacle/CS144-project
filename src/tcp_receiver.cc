@@ -5,7 +5,10 @@ using namespace std;
 void TCPReceiver::receive(TCPSenderMessage message) {
   // Your code here.
   if (message.RST) {
-    reassembler_.reader().set_error();
+    reader().set_error();
+    return;
+  }
+  if (writer().has_error()) {
     return;
   }
   if (message.SYN) {
@@ -24,14 +27,14 @@ void TCPReceiver::receive(TCPSenderMessage message) {
 
 TCPReceiverMessage TCPReceiver::send() const {
   // Your code here.
-  if (reassembler_.reader().has_error()) {
+  if (reader().has_error()) {
     TCPReceiverMessage message;
     message.RST = true;
     return message;
   }
   TCPReceiverMessage message;
   uint64_t abs_ackno = reassembler_.waiting() + 1;
-  if (reassembler_.writer().is_closed()) {
+  if (writer().is_closed()) {
     abs_ackno++;
   }
   if (initial_seqno_received_) {
