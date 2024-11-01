@@ -8,6 +8,17 @@ import os
 from typing import Union
 
 
+def check_result(result: int) -> None:
+    if result != 0:
+        raise ValueError(f"Command failed with code {result}")
+    print(f"{GREEN}{__file__}: {YELLOW}Command success{CLEAR}")
+
+
+def run_cmd(cmd: str) -> None:
+    print(f"{GREEN}{__file__}: {YELLOW}Running {cmd}...{CLEAR}")
+    check_result(os.system(cmd))
+
+
 def test(index: Union[int, str]) -> None:
     if not isinstance(index, int):
         try:
@@ -15,9 +26,17 @@ def test(index: Union[int, str]) -> None:
         except:
             raise TypeError(f"index must be an integer, but got {index}")
     cmd = f"cmake --build build --target check{index}"
-    print(f"{GREEN}{__file__}: {CLEAR}", end="")
-    print(f"{YELLOW}Running {cmd}...{CLEAR}")
-    os.system(cmd)
+    run_cmd(cmd)
+
+
+def make_zip(index: Union[int, str]) -> None:
+    if not isinstance(index, int):
+        try:
+            index = int(index)
+        except:
+            raise TypeError(f"index must be an integer, but got {index}")
+    cmd = f"cd .. && zip -r 221240060-熊浚丞-check{index}.zip ./221240060-熊浚丞-check{index}.pdf ./minnow > /dev/null"
+    run_cmd(cmd)
 
 
 def main(*args) -> None:
