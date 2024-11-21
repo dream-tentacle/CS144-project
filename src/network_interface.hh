@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <map>
+#include <vector>
 
 #include "address.hh"
 #include "ethernet_frame.hh"
@@ -69,9 +70,10 @@ public:
     return datagrams_received_;
   }
 
-  deque<pair<EthernetFrame, Address>> frames_to_send;
+  std::vector<std::pair<EthernetFrame, Address>> frames_to_send{};
 
-  map<uint32_t, pair<EthernetAddress, uint32_t>> ethernet_adr_table;
+  std::map<uint32_t, std::pair<EthernetAddress, int32_t>> ethernet_adr_table{};
+  std::map<uint32_t, std::pair<EthernetAddress, int32_t>> query_adr_table{};
 
 private:
   // Human-readable name of the interface
@@ -93,4 +95,6 @@ private:
 
   // Datagrams that have been received
   std::queue<InternetDatagram> datagrams_received_{};
+
+  void process_on_learnt(const ARPMessage &recv_arp);
 };
