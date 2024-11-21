@@ -10,13 +10,21 @@ from typing import Union
 
 def check_result(result: int) -> None:
     if result != 0:
-        raise ValueError(f"Command failed with code {result}")
-    print(f"{GREEN}{__file__}: {YELLOW}Command success{CLEAR}")
+        raise ValueError(f"{RED}{__file__}: Command failed{CLEAR}")
+    print(f"{GREEN}{__file__}: Command success{CLEAR}")
 
 
 def run_cmd(cmd: str) -> None:
-    print(f"{GREEN}{__file__}: {YELLOW}Running {cmd}...{CLEAR}")
+    print(f"{YELLOW}{__file__}: Running {CLEAR}{cmd}")
     check_result(os.system(cmd))
+
+
+def initialize(index: Union[int, str]) -> None:
+    cmd = f"git fetch --all &&git merge origin/check{index}-startercode"
+    run_cmd(cmd)
+    cmd = "cmake -S . -B build"
+    run_cmd(cmd)
+    cmd = "cmake --build build"
 
 
 def test(index: Union[int, str]) -> None:

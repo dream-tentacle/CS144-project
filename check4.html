@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&#x8865;&#x5145;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <ol>
+<li>What was the overall delivery rate over the entire interval? In other words: how many echo replies were received, divided by how many echo requests were sent? (Note: ping on GNU/Linux doesn’t print any message about echo replies that are not received. You’ll have to identify missing replies by looking for missing sequence numbers.) <br/>
+只丢包8个，丢包率8/42015=0.000190408</li>
+<li>What was the longest consecutive string of successful pings (all replied-to in a row)?<br/>
+最长连续成功ping的次数是22814次</li>
+<li>What was the longest burst of losses (all not replied-to in a row)?<br/>
+只有1次</li>
+<li>How independent or correlated is the event of “packet loss” over time? In other words:</li>
+</ol>
+<ul>
+<li>Given that echo request #N received a reply, what is the probability that echo request #(N+1) was also successfully replied-to?<br/>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>42015</mn><mo>−</mo><mn>8</mn><mo>−</mo><mn>8</mn></mrow><mrow><mn>42015</mn><mo>−</mo><mn>8</mn></mrow></mfrac><mo>≈</mo><mn>0.999809556</mn></mrow><annotation encoding="application/x-tex">\frac{42015-8-8}{42015-8}\approx 0.999809556</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2484em;vertical-align:-0.4033em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">42015</span><span class="mbin mtight">−</span><span class="mord mtight">8</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">42015</span><span class="mbin mtight">−</span><span class="mord mtight">8</span><span class="mbin mtight">−</span><span class="mord mtight">8</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4033em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.999809556</span></span></span></span></li>
+<li>Given that echo request #N did not receive a reply, what is the probability that echo request #(N+1) was successfully replied-to? <br/>
+1</li>
+<li>How do these figures (the conditional delivery rates) compare with the overall “unconditional” packet delivery rate in the first question? How independent or bursty were the losses?<br/>
+二者之差大于0.000190408，说明丢包是bursty的</li>
+</ul>
+<ol start="5">
+<li>What was the minimum RTT seen over the entire interval? (This is probably a
+reasonable approximation of the true MinRTT...) <br/>
+197ms</li>
+<li>What was the maximum RTT seen over the entire interval? <br/>
+848ms</li>
+<li>Make a graph of the RTT as a function of time. Label the x-axis with the actual time of day (covering the 2+-hour period), and the y-axis should be the number of milliseconds of RTT. <br/>
+<img src="file:////home/dream/code/check4-1.png" alt="RTT as a function of time"></li>
+<li>Make a histogram or Cumulative Distribution Function of the distribution of RTTs
+observed. What rough shape is the distribution? <br/>
+<img src="file:////home/dream/code/check4-2.png" alt="RTT distribution"></li>
+<li>make a graph of the correlation between “RTT of ping #N” and “RTT of ping #N+1”.
+The x-axis should be the number of milliseconds from the first RTT, and the y-axis should be the number of milliseconds from the second RTT. How correlated is the RTT over time? <br/>
+<img src="file:////home/dream/code/check4-4.png" alt=""><br/>
+RTT之间一般是比较接近的，从图上可以看到大部分在x=y的直线上</li>
+<li>What are your conclusions from the data? Did the network path behave the way you
+were expecting? What (if anything) surprised you from looking at the graphs and summary statistics? <br/>
+网络路径的表现和预期的差不多，但是丢包率比较低，RTT的分布比较集中，RTT之间的相关性比较高</li>
+</ol>
+<h3 id="补充">补充</h3>
+<p>我的数据中有许多的DUP（650个），比丢包还多，但是这个报告没有让我分析DUP的情况，我认为这是不合理的。这里放一张DUP随时间的累积图：
+<img src="file:////home/dream/code/check4-3.png" alt="DUP随时间的累积图"></p>
+
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>
