@@ -37,8 +37,7 @@ void NetworkInterface::send_datagram(const InternetDatagram &dgram,
   frame.header.type = EthernetHeader::TYPE_IPv4;
   frame.payload = serialize(dgram);
   frame.header.src = ethernet_address_;
-  if (ethernet_adr_table[next_hop.ipv4_numeric()].first == ETHERNET_BROADCAST ||
-      ethernet_adr_table[next_hop.ipv4_numeric()].second <= 0) {
+  if (ethernet_adr_table[next_hop.ipv4_numeric()].second <= 0) {
     frames_to_send.push_back({frame, next_hop});
     if (query_adr_table[next_hop.ipv4_numeric()].second <= 0) {
       EthernetFrame arp_frame;
