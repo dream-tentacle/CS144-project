@@ -62,12 +62,6 @@ void NetworkInterface::send_datagram(const InternetDatagram &dgram,
 void NetworkInterface::process_on_learnt(const ARPMessage &recv_arp) {
   ethernet_adr_table[recv_arp.sender_ip_address] = {
       recv_arp.sender_ethernet_address, 30 * 1000};
-  for (auto it = frames_to_send.begin(); it != frames_to_send.end(); it++) {
-    Parser p(it->first.payload);
-    InternetDatagram dgram;
-    dgram.parse(p);
-  }
-
   for (auto it = frames_to_send.begin(); it != frames_to_send.end();) {
     if (it->second.ipv4_numeric() == recv_arp.sender_ip_address) {
       it->first.header.dst = recv_arp.sender_ethernet_address;
@@ -76,11 +70,6 @@ void NetworkInterface::process_on_learnt(const ARPMessage &recv_arp) {
     } else {
       it++;
     }
-  }
-  for (auto it = frames_to_send.begin(); it != frames_to_send.end(); it++) {
-    Parser p(it->first.payload);
-    InternetDatagram dgram;
-    dgram.parse(p);
   }
 }
 //! \param[in] frame the incoming Ethernet frame
@@ -104,14 +93,9 @@ void NetworkInterface::recv_frame(const EthernetFrame &frame) {
         arp_frame.header.dst = recv_arp.sender_ethernet_address;
         arp_frame.payload = serialize(arp_reply);
         transmit(arp_frame);
-        // 从这个地址学习
       }
-      process_on_learnt(recv_arp);
-      // else: NOTHING
-    } else if (recv_arp.opcode == ARPMessage::OPCODE_REPLY) {
-      // 接到回复了
-      process_on_learnt(recv_arp);
     }
+    process_on_learnt(recv_arp);
   } else if (frame.header.type == EthernetHeader::TYPE_IPv4 &&
              frame.header.dst == ethernet_address_) {
     InternetDatagram dgram;
